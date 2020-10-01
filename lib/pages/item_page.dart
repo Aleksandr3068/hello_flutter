@@ -33,7 +33,7 @@ class DetailScreen extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(data.image),
+                    image: AssetImage(data.image),
                     fit: BoxFit.cover,
                   ),
                 ),

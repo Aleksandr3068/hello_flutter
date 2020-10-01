@@ -45,52 +45,61 @@ class HomePage extends StatelessWidget {
       ),
       body: FutureBuilder(
         builder: (context, snapshot) {
-          final showData = json.decode(snapshot.data.toString());
-          return ListView.builder(
-            itemCount: showData.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(showData[index]['name']),
-                subtitle: Container(
-                  height: 35,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(showData[index]['subtitle']),
-                      IconButton(
-                          icon: Icon(
-                            Icons.add_circle_outline,
-                            color: Colors.black12,
-                            size: 30,
-                          ),
-                          onPressed: () {
-                            Provider.of<CartDataProvider>(context,
-                                    listen: false)
-                                .addItem(
-                              productId: showData[index]['id'],
-                              price: showData[index]['price'],
-                              title: showData[index]['name'],
-                              image: showData[index]['image'],
-                            );
-                          })
-                    ],
+          if (snapshot.data == null) {
+            return Container(
+              child: Center(
+                child: Text("Loading..."),
+              ),
+            );
+          } else {
+            final showData = json.decode(snapshot.data.toString());
+            return ListView.builder(
+              itemCount: showData.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(showData[index]['name']),
+                  subtitle: Container(
+                    height: 35,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(showData[index]['subtitle']),
+                        IconButton(
+                            icon: Icon(
+                              Icons.add_circle_outline,
+                              color: Colors.black12,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              Provider.of<CartDataProvider>(context,
+                                      listen: false)
+                                  .addItem(
+                                productId: showData[index]['id'],
+                                price: showData[index]['price'],
+                                title: showData[index]['name'],
+                                image: showData[index]['image'],
+                              );
+                            })
+                      ],
+                    ),
                   ),
-                ),
-                trailing: Text(
-                  '${showData[index]['price']}'.toString() + " р.",
-                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                ),
-                leading: Image.asset(showData[index]['image']),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            DetailScreen(todo: showData[index]['id'])),
-                  );
-                },
-              );
-            },
-          );
+                  trailing: Text(
+                    '${showData[index]['price']}'.toString() + " р.",
+                    style:
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  ),
+                  leading: Image.asset(showData[index]['image']),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DetailScreen(todo: showData[index]['id'])),
+                    );
+                  },
+                );
+              },
+            );
+          }
         },
         future:
             DefaultAssetBundle.of(context).loadString("assets/product.json"),
