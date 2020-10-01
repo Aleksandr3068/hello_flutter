@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:hello_flutter/models/Product.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+
+import 'package:hello_flutter/pages/item_page.dart';
+import 'package:hello_flutter/models/card.dart';
+import 'package:hello_flutter/widgets/bottom_bar.dart';
+import 'package:hello_flutter/pages/cart_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<ProductDataProvider>(context);
+    final cartData = Provider.of<CartDataProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -17,110 +21,81 @@ class HomePage extends StatelessWidget {
           tooltip: 'Navigation menu',
           onPressed: null,
         ),
-        title: Text('sportpit.ru'),
+        title: Text('sportpit.ru', style: TextStyle(color: Colors.black)),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-            onPressed: null,
+          Container(
+            height: 50.0,
+            width: MediaQuery.of(context).size.width / 2 - 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(cartData.totalAmount.toStringAsFixed(2)),
+                IconButton(
+                  icon: Icon(Icons.shopping_basket, color: Color(0xFF676E79)),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CartPage(),
+                    ));
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
-      body: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: productData.items.length,
-        itemBuilder: (context, int index) {
-          return ListTile(
-            title: Text(productData.items[index].name),
-            subtitle: Text(productData.items[index].subtitle),
-            trailing: Text(productData.items[index].price,
-                style:
-                    new TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
-            leading: Image.asset(productData.items[index].image),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      DetailScreen(todo: productData.items[index]),
+      body: FutureBuilder(
+        builder: (context, snapshot) {
+          final showData = json.decode(snapshot.data.toString());
+          return ListView.builder(
+            itemCount: showData.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(showData[index]['name']),
+                subtitle: Container(
+                  height: 35,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(showData[index]['subtitle']),
+                      IconButton(
+                          icon: Icon(
+                            Icons.add_circle_outline,
+                            color: Colors.black12,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Provider.of<CartDataProvider>(context,
+                                    listen: false)
+                                .addItem(
+                              productId: showData[index]['id'],
+                              price: showData[index]['price'],
+                              title: showData[index]['name'],
+                              image: showData[index]['image'],
+                            );
+                          })
+                    ],
+                  ),
                 ),
+                trailing: Text(
+                  '${showData[index]['price']}'.toString() + " р.",
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+                leading: Image.asset(showData[index]['image']),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            DetailScreen(todo: showData[index]['id'])),
+                  );
+                },
               );
             },
           );
         },
+        future:
+            DefaultAssetBundle.of(context).loadString("assets/product.json"),
       ),
-    );
-  }
-}
-
-class DetailScreen extends StatelessWidget {
-  final Product todo;
-
-  DetailScreen({Key key, @required this.todo}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          todo.name,
-          style: GoogleFonts.marmelad(),
-        ),
-      ),
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            Hero(
-              tag: todo.image,
-              child: Container(
-                child: Image.asset(todo.bigimage),
-                height: 300,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(todo.image),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              elevation: 5.0,
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 35.0, vertical: 10.0),
-              child: Container(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      todo.name,
-                      style: TextStyle(fontSize: 26.0),
-                    ),
-                    Divider(),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          'Цена: ',
-                          style: TextStyle(fontSize: 24.0),
-                        ),
-                        Text(
-                          todo.price,
-                          style: TextStyle(fontSize: 24.0),
-                        ),
-                      ],
-                    ),
-                    Divider(),
-                    Text(todo.description),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }
