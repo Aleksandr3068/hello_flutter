@@ -31,12 +31,6 @@ class DetailScreen extends StatelessWidget {
                 child: Image.asset(data.bigimage),
                 height: 300,
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(data.image),
-                    fit: BoxFit.cover,
-                  ),
-                ),
               ),
             ),
             Card(
