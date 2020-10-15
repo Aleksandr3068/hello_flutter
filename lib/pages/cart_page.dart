@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:hello_flutter/models/card.dart';
-import 'package:hello_flutter/widgets/cart_list_item.dart';
+import 'package:hello_flutter/pages/item_page.dart';
+import 'package:hello_flutter/pages/home_page.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   CartPage({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final cartData = context.watch<CartDataProvider>();
+  _CartPageState createState() => _CartPageState();
+}
 
+class _CartPageState extends State<CartPage> {
+  @override
+  Widget build(BuildContext context) {
+    final cartData = CartDataProvider();
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_outlined),
+            tooltip: 'Navigation menu',
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ));
+            },
+          ),
           title: Text('Корзина'),
         ),
         body: cartData.cartItems.isEmpty
@@ -40,6 +53,7 @@ class CartPage extends StatelessWidget {
                       ),
                       MaterialButton(
                         onPressed: () {
+                          setState(() {});
                           cartData.clear();
                         },
                         color: Theme.of(context).primaryColor,
@@ -48,7 +62,93 @@ class CartPage extends StatelessWidget {
                     ],
                   ),
                   Divider(),
-                  Expanded(child: CartItemList(cartData: cartData)),
+                  Expanded(
+                      child: Container(
+                    child: ListView.builder(
+                        padding: const EdgeInsets.all(15.0),
+                        itemCount: cartData.cartItemsCount,
+                        itemBuilder: (context, index) {
+                          return Dismissible(
+                              key: ValueKey(
+                                  cartData.cartItems.keys.toList()[index]),
+                              background: Container(
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.redAccent,
+                                  size: 30.0,
+                                ),
+                                alignment: Alignment.centerRight,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 4),
+                                padding: const EdgeInsets.only(right: 10.0),
+                              ),
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) => CartDataProvider()
+                                  .deleteItem(
+                                      cartData.cartItems.keys.toList()[index]),
+                              child: Container(
+                                child: ListTile(
+                                  leading: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailScreen(
+                                                      todo: cartData
+                                                          .cartItems.values
+                                                          .toList()[index]
+                                                          .index)));
+                                    },
+                                    child: Container(
+                                      width: 40,
+                                      height: 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          image: AssetImage(cartData
+                                              .cartItems.values
+                                              .toList()[index]
+                                              .image),
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  title: Text(cartData.cartItems.values
+                                      .toList()[index]
+                                      .title),
+                                  subtitle: Text(
+                                      'Цена: ${cartData.cartItems.values.toList()[index].price} р.'),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      IconButton(
+                                          icon:
+                                              Icon(Icons.remove_circle_outline),
+                                          onPressed: () {
+                                            setState(() {});
+                                            CartDataProvider()
+                                                .updateItemsSubOne(cartData
+                                                    .cartItems.keys
+                                                    .toList()[index]);
+                                          }),
+                                      Text(
+                                          'x${cartData.cartItems.values.toList()[index].number}'),
+                                      IconButton(
+                                          icon: Icon(Icons.add_circle_outline),
+                                          onPressed: () {
+                                            setState(() {});
+                                            CartDataProvider()
+                                                .updateItemsAddOne(cartData
+                                                    .cartItems.keys
+                                                    .toList()[index]);
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                        }),
+                  )),
                 ],
               ));
   }

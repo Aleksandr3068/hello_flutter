@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:hello_flutter/models/card.dart';
 import 'package:hello_flutter/pages/item_page.dart';
+import 'package:hello_flutter/models/card.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final cartData = Provider.of<CartDataProvider>(context);
+    final cartData = CartDataProvider();
     final cartItems = cartData.cartItems;
 
     return BottomAppBar(
@@ -32,12 +31,11 @@ class BottomBar extends StatelessWidget {
                   tag: cartItems.values.toList()[index].image,
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
+                      Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => DetailScreen(
-                              todo: cartItems.keys.toList()[index]),
-                        ),
-                      );
+                              todo: cartData.cartItems.values
+                                  .toList()[index]
+                                  .index)));
                     },
                     child: Stack(
                       alignment: Alignment.center,

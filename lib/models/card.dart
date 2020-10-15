@@ -1,45 +1,31 @@
 import 'dart:collection';
 import 'package:flutter/cupertino.dart';
+import 'package:hello_flutter/models/singleton.dart';
 
-// Cart Model
-class Cart {
-  final String id;
-  final String title;
-  final int number;
-  final num price;
-  final String image;
-
-  Cart(
-      {@required this.id,
-      @required this.title,
-      @required this.number,
-      @required this.price,
-      @required this.image});
-}
-
-// Cart Provider
+// Cart
 class CartDataProvider with ChangeNotifier {
-  Map<String, Cart> _cartItems = {};
+  var singleton = Singleton();
 
   UnmodifiableMapView<String, Cart> get cartItems =>
-      UnmodifiableMapView(_cartItems);
+      UnmodifiableMapView(singleton.cartItem);
 
-  int get cartItemsCount => _cartItems.length;
+  int get cartItemsCount => singleton.cartItem.length;
 
   double get totalAmount {
     var total = 0.0;
-    _cartItems.forEach((key, item) {
+    singleton.cartItem.forEach((key, item) {
       total += item.price * item.number;
     });
 
     return total;
   }
 
-  void addItem({productId, price, title, image}) {
-    if (_cartItems.containsKey(productId)) {
-      _cartItems.update(
+  void addItem({productId, price, title, image, index}) {
+    if (singleton.cartItem.containsKey(productId)) {
+      singleton.cartItem.update(
           productId,
           (ex) => Cart(
+                index: index,
                 id: ex.id,
                 title: ex.title,
                 price: ex.price,
@@ -47,9 +33,10 @@ class CartDataProvider with ChangeNotifier {
                 number: ex.number + 1,
               ));
     } else {
-      _cartItems.putIfAbsent(
+      singleton.cartItem.putIfAbsent(
           productId,
           () => Cart(
+                index: index,
                 id: '${DateTime.now()}',
                 title: title,
                 price: price,
@@ -61,13 +48,14 @@ class CartDataProvider with ChangeNotifier {
   }
 
   void deleteItem(String productId) {
-    _cartItems.remove(productId);
+    singleton.cartItem.remove(productId);
+
     notifyListeners();
   }
 
   // Обновить корзину на +1 единицу товара по id
   void updateItemsAddOne(String productId) {
-    _cartItems.update(
+    singleton.cartItem.update(
       productId,
       (ex) => Cart(
         id: ex.id,
@@ -82,10 +70,10 @@ class CartDataProvider with ChangeNotifier {
 
   // Обновить корзину на -1 единицу товара по id
   void updateItemsSubOne(String productId) {
-    if (_cartItems[productId].number < 2) {
+    if (singleton.cartItem[productId].number < 2) {
       deleteItem(productId);
     } else {
-      _cartItems.update(
+      singleton.cartItem.update(
         productId,
         (ex) => Cart(
           id: ex.id,
@@ -100,7 +88,7 @@ class CartDataProvider with ChangeNotifier {
   }
 
   void clear() {
-    _cartItems = {};
+    singleton.cartItem = {};
     notifyListeners();
   }
 }
