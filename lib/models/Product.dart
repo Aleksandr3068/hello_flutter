@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class Todo with ChangeNotifier {
+class Product with ChangeNotifier {
   final String _id;
   final String _name;
   final String _subtitle;
@@ -9,7 +9,7 @@ class Todo with ChangeNotifier {
   final String _description;
   final String _bigimage;
 
-  Todo(
+  Product(
     this._id,
     this._name,
     this._subtitle,
@@ -19,11 +19,11 @@ class Todo with ChangeNotifier {
     this._bigimage,
   );
 
-  factory Todo.fromJSON(Map<String, dynamic> json) {
+  factory Product.fromJSON(Map<String, dynamic> json) {
     if (json == null) {
       return null;
     } else {
-      return Todo(json["id"], json["name"], json["subtitle"], json["price"],
+      return Product(json["id"], json["name"], json["subtitle"], json["price"],
           json["image"], json["description"], json["bigimage"]);
     }
   }

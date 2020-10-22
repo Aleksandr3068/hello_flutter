@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hello_flutter/models/product.dart';
-import 'package:hello_flutter/models/card.dart';
+import 'package:hello_flutter/models/cart.dart';
 import 'package:hello_flutter/pages/cart_page.dart';
 import 'package:hello_flutter/pages/home_page.dart';
 
-class DetailScreen extends StatelessWidget {
-  final Todo todo;
+class DetailScreen extends StatefulWidget {
+  final Product product;
 
-  DetailScreen({Key key, this.todo}) : super(key: key);
+  DetailScreen({Key key, this.product}) : super(key: key);
 
+  @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +30,7 @@ class DetailScreen extends StatelessWidget {
           },
         ),
         title: Text(
-          todo.name,
+          widget.product.name,
           style: GoogleFonts.marmelad(),
         ),
       ),
@@ -33,9 +38,9 @@ class DetailScreen extends StatelessWidget {
         child: ListView(
           children: <Widget>[
             Hero(
-              tag: todo.image,
+              tag: widget.product.image,
               child: Container(
-                child: Image.asset(todo.bigimage),
+                child: Image.asset(widget.product.bigimage),
                 height: 300,
                 width: double.infinity,
               ),
@@ -49,7 +54,7 @@ class DetailScreen extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      todo.name + " " + todo.subtitle,
+                      widget.product.name + " " + widget.product.subtitle,
                       style: TextStyle(fontSize: 26.0),
                     ),
                     Divider(),
@@ -61,17 +66,17 @@ class DetailScreen extends StatelessWidget {
                               fontSize: 24.0, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          '${todo.price}'.toString() + " р.",
+                          '${widget.product.price}'.toString() + " р.",
                           style: TextStyle(fontSize: 24.0),
                         ),
                       ],
                     ),
                     Divider(),
-                    Text(todo.description),
+                    Text(widget.product.description),
                     SizedBox(
                       height: 20.0,
                     ),
-                    CartDataProvider().cartItems.containsKey(todo)
+                    Cart().cartItems.containsKey(widget.product.id)
                         ? Column(
                             children: <Widget>[
                               MaterialButton(
@@ -96,12 +101,9 @@ class DetailScreen extends StatelessWidget {
                             color: Theme.of(context).primaryColor,
                             child: Text('Добавить в корзину'),
                             onPressed: () {
-                              CartDataProvider().addItem(
-                                productId: todo.id,
-                                image: todo.image,
-                                title: todo.name,
-                                price: todo.price,
-                              );
+                              setState(() {
+                                Cart.shared.addItem(widget.product);
+                              });
                             },
                           ),
                   ],

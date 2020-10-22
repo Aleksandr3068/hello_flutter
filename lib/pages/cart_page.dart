@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:hello_flutter/models/card.dart';
+import 'package:hello_flutter/models/cart.dart';
 import 'package:hello_flutter/pages/item_page.dart';
 import 'package:hello_flutter/pages/home_page.dart';
 
@@ -14,7 +14,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
-    final cartData = CartDataProvider();
+    final cartData = Cart();
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -83,9 +83,8 @@ class _CartPageState extends State<CartPage> {
                                 padding: const EdgeInsets.only(right: 10.0),
                               ),
                               direction: DismissDirection.endToStart,
-                              onDismissed: (direction) => CartDataProvider()
-                                  .deleteItem(
-                                      cartData.cartItems.keys.toList()[index]),
+                              onDismissed: (direction) => Cart().deleteItem(
+                                  cartData.cartItems.keys.toList()[index]),
                               child: Container(
                                 child: ListTile(
                                   leading: InkWell(
@@ -94,7 +93,7 @@ class _CartPageState extends State<CartPage> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   DetailScreen(
-                                                      todo: cartData
+                                                      product: cartData
                                                           .cartItems.values
                                                           .toList()[index]
                                                           .index)));
@@ -127,21 +126,22 @@ class _CartPageState extends State<CartPage> {
                                               Icon(Icons.remove_circle_outline),
                                           onPressed: () {
                                             setState(() {});
-                                            CartDataProvider()
-                                                .updateItemsSubOne(cartData
-                                                    .cartItems.keys
-                                                    .toList()[index]);
+                                            Cart().updateItemsSubOne(cartData
+                                                .cartItems.values
+                                                .toList()[index]
+                                                .id);
                                           }),
                                       Text(
                                           'x${cartData.cartItems.values.toList()[index].number}'),
                                       IconButton(
                                           icon: Icon(Icons.add_circle_outline),
                                           onPressed: () {
-                                            setState(() {});
-                                            CartDataProvider()
-                                                .updateItemsAddOne(cartData
-                                                    .cartItems.keys
-                                                    .toList()[index]);
+                                            setState(() {
+                                              Cart().updateItemsAddOne(cartData
+                                                  .cartItems.values
+                                                  .toList()[index]
+                                                  .id);
+                                            });
                                           }),
                                     ],
                                   ),

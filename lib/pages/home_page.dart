@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/models/product.dart';
-//import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:hello_flutter/pages/item_page.dart';
-import 'package:hello_flutter/models/card.dart';
+import 'package:hello_flutter/models/cart.dart';
 import 'package:hello_flutter/widgets/bottom_bar.dart';
 import 'package:hello_flutter/pages/cart_page.dart';
-//import 'package:hello_flutter/models/singleton.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -17,16 +15,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<Todo>> getContactsFromJSON(BuildContext context) async {
+  Future<List<Product>> getContactsFromJSON(BuildContext context) async {
     String jsonString =
         await DefaultAssetBundle.of(context).loadString("assets/product.json");
     List<dynamic> raw = jsonDecode(jsonString);
-    return raw.map((f) => Todo.fromJSON(f)).toList();
+    return raw.map((f) => Product.fromJSON(f)).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final cartData = CartDataProvider();
+    final cartData = Cart();
 
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +39,7 @@ class _HomePageState extends State<HomePage> {
             height: 50.0,
             width: MediaQuery.of(context).size.width / 2 - 50,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(cartData.totalAmount.toStringAsFixed(2)),
                 IconButton(
@@ -52,6 +50,8 @@ class _HomePageState extends State<HomePage> {
                     ));
                   },
                 ),
+                Text(" (" + cartData.quantityProducts.toStringAsFixed(0) + ")",
+                    textAlign: TextAlign.start),
               ],
             ),
           ),
@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
           future: getContactsFromJSON(context),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              List<Todo> products = snapshot.data;
+              List<Product> products = snapshot.data;
               return ListView.builder(
                 itemCount: products.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -73,36 +73,31 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(products[index].subtitle),
-                          IconButton(
-                              icon: Icon(
-                                Icons.add_circle_outline,
-                                color: Colors.black12,
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                setState(() {});
-                                CartDataProvider().addItem(
-                                  index: products[index],
-                                  productId: products[index].id,
-                                  price: products[index].price,
-                                  title: products[index].name,
-                                  image: products[index].image,
-                                );
-                              })
+                          Text(
+                            '${products[index].price}'.toString() + " р.",
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ),
-                    trailing: Text(
-                      '${products[index].price}'.toString() + " р.",
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.bold),
-                    ),
+                    trailing: IconButton(
+                        icon: Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.black12,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            Cart.shared.addItem(products[index]);
+                          });
+                        }),
                     leading: Image.asset(products[index].image),
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) =>
-                                DetailScreen(todo: products[index])),
+                                DetailScreen(product: products[index])),
                       );
                     },
                   );

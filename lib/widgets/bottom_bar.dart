@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:hello_flutter/pages/item_page.dart';
-import 'package:hello_flutter/models/card.dart';
+import 'package:hello_flutter/models/cart.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final cartData = CartDataProvider();
+    final cartData = Cart();
     final cartItems = cartData.cartItems;
 
     return BottomAppBar(
@@ -33,7 +33,7 @@ class BottomBar extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => DetailScreen(
-                              todo: cartData.cartItems.values
+                              product: cartData.cartItems.values
                                   .toList()[index]
                                   .index)));
                     },
