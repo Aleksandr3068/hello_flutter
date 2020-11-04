@@ -8,8 +8,7 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartData = Cart();
-    final cartItems = cartData.cartItems;
+    final cartItems = Cart.shared.cartItem;
 
     return BottomAppBar(
       color: Colors.transparent,
@@ -28,14 +27,14 @@ class BottomBar extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: cartItems.length,
                 itemBuilder: (context, index) => Hero(
-                  tag: cartItems.values.toList()[index].image,
+                  tag: cartItems.values.toList()[index].product.image,
                   child: GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => DetailScreen(
-                              product: cartData.cartItems.values
+                              product: Cart.shared.cartItems.values
                                   .toList()[index]
-                                  .index)));
+                                  .product)));
                     },
                     child: Stack(
                       alignment: Alignment.center,
@@ -55,8 +54,10 @@ class BottomBar extends StatelessWidget {
                               )
                             ],
                             image: DecorationImage(
-                              image: AssetImage(
-                                  cartItems.values.toList()[index].image),
+                              image: AssetImage(cartItems.values
+                                  .toList()[index]
+                                  .product
+                                  .image),
                               fit: BoxFit.fill,
                             ),
                           ),

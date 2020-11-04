@@ -25,7 +25,7 @@ class Cart with ChangeNotifier {
   double get totalAmount {
     var total = 0.0;
     cartItem.forEach((key, item) {
-      total += item.price * item.number;
+      total += item.product.price * item.number;
     });
 
     return total;
@@ -45,22 +45,14 @@ class Cart with ChangeNotifier {
       cartItem.update(
           recievedProduct.id,
           (ex) => CartProduct(
-                index: ex.index,
-                id: ex.id,
-                title: ex.title,
-                price: ex.price,
-                image: ex.image,
+                product: ex.product,
                 number: ex.number + 1,
               ));
     } else {
       cartItem.putIfAbsent(
           recievedProduct.id,
           () => CartProduct(
-                index: recievedProduct,
-                id: recievedProduct.id,
-                title: recievedProduct.name,
-                price: recievedProduct.price,
-                image: recievedProduct.image,
+                product: recievedProduct,
                 number: 1,
               ));
     }
@@ -78,11 +70,7 @@ class Cart with ChangeNotifier {
     cartItem.update(
       productId,
       (ex) => CartProduct(
-        index: ex.index,
-        id: ex.id,
-        title: ex.title,
-        price: ex.price,
-        image: ex.image,
+        product: ex.product,
         number: ex.number + 1,
       ),
     );
@@ -97,11 +85,7 @@ class Cart with ChangeNotifier {
       cartItem.update(
         productId,
         (ex) => CartProduct(
-          index: ex.index,
-          id: ex.id,
-          title: ex.title,
-          price: ex.price,
-          image: ex.image,
+          product: ex.product,
           number: ex.number - 1,
         ),
       );
@@ -118,19 +102,6 @@ class Cart with ChangeNotifier {
 class CartProduct {
   Product product;
   int number;
-  int quantity;
-  final index;
-  final String id;
-  final String title;
-  final num price;
-  final String image;
 
-  CartProduct(
-      {this.index,
-      this.id,
-      this.title,
-      this.price,
-      this.image,
-      this.product,
-      this.number});
+  CartProduct({this.product, this.number});
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:hello_flutter/db/database.dart';
 import 'package:hello_flutter/models/product.dart';
 import 'package:hello_flutter/models/cart.dart';
 import 'package:hello_flutter/pages/cart_page.dart';
@@ -16,6 +17,29 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  bool _isSelect = false;
+
+  Contact _contact = Contact();
+  List<Contact> _contacts = [];
+  DatabaseHelper _dbHelper;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _dbHelper = DatabaseHelper.instance;
+    _refreshContactList();
+  }
+
+  _refreshContactList() async {
+    List<Contact> x = await _dbHelper.fetchContacts();
+    setState(() {
+      _contacts = x;
+      print(_contacts);
+      _toggleFavorite();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +58,8 @@ class _DetailScreenState extends State<DetailScreen> {
           style: GoogleFonts.marmelad(),
         ),
       ),
-      body: Container(
+      body: Form(
+        key: _formKey,
         child: ListView(
           children: <Widget>[
             Hero(
@@ -76,6 +101,37 @@ class _DetailScreenState extends State<DetailScreen> {
                     SizedBox(
                       height: 20.0,
                     ),
+                    Container(
+                      child: IconButton(
+                        icon: (_isSelect
+                            ? Icon(Icons.favorite)
+                            : Icon(Icons.favorite_border)),
+                        onPressed: () async {
+                          _toggleFavorite();
+                          Contact product = Contact(
+                              id: widget.product.id,
+                              image: widget.product.image,
+                              subtitle: widget.product.subtitle,
+                              name: widget.product.name,
+                              price: widget.product.price);
+                          var form = _formKey.currentState;
+                          if (_isSelect) {
+                            await _dbHelper.deleteContact(widget.product.id);
+                            form.reset();
+                            _refreshContactList();
+                            _isSelect = false;
+                          } else {
+                            if (form.validate()) {
+                              form.save();
+                              await _dbHelper.insertContact(product);
+                              form.reset();
+                              await _refreshContactList();
+                            }
+                          }
+                        },
+                        color: Colors.red[500],
+                      ),
+                    ),
                     Cart().cartItems.containsKey(widget.product.id)
                         ? Column(
                             children: <Widget>[
@@ -114,5 +170,15 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
       ),
     );
+  }
+
+  void _toggleFavorite() {
+    setState(() {
+      _contacts.forEach((item) {
+        if (item.id == widget.product.id) {
+          _isSelect = true;
+        }
+      });
+    });
   }
 }

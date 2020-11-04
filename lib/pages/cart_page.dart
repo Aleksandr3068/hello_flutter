@@ -14,7 +14,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
-    final cartData = Cart();
+    final cartData = Cart.shared;
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -83,7 +83,7 @@ class _CartPageState extends State<CartPage> {
                                 padding: const EdgeInsets.only(right: 10.0),
                               ),
                               direction: DismissDirection.endToStart,
-                              onDismissed: (direction) => Cart().deleteItem(
+                              onDismissed: (direction) => cartData.deleteItem(
                                   cartData.cartItems.keys.toList()[index]),
                               child: Container(
                                 child: ListTile(
@@ -96,7 +96,7 @@ class _CartPageState extends State<CartPage> {
                                                       product: cartData
                                                           .cartItems.values
                                                           .toList()[index]
-                                                          .index)));
+                                                          .product)));
                                     },
                                     child: Container(
                                       width: 40,
@@ -107,6 +107,7 @@ class _CartPageState extends State<CartPage> {
                                           image: AssetImage(cartData
                                               .cartItems.values
                                               .toList()[index]
+                                              .product
                                               .image),
                                           fit: BoxFit.fill,
                                         ),
@@ -115,9 +116,10 @@ class _CartPageState extends State<CartPage> {
                                   ),
                                   title: Text(cartData.cartItems.values
                                       .toList()[index]
-                                      .title),
+                                      .product
+                                      .name),
                                   subtitle: Text(
-                                      'Цена: ${cartData.cartItems.values.toList()[index].price} р.'),
+                                      'Цена: ${cartData.cartItems.values.toList()[index].product.price} р.'),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
@@ -129,6 +131,7 @@ class _CartPageState extends State<CartPage> {
                                             Cart().updateItemsSubOne(cartData
                                                 .cartItems.values
                                                 .toList()[index]
+                                                .product
                                                 .id);
                                           }),
                                       Text(
@@ -140,6 +143,7 @@ class _CartPageState extends State<CartPage> {
                                               Cart().updateItemsAddOne(cartData
                                                   .cartItems.values
                                                   .toList()[index]
+                                                  .product
                                                   .id);
                                             });
                                           }),

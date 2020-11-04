@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/models/product.dart';
+import 'package:hello_flutter/pages/favorite_page.dart';
 import 'dart:convert';
 
 import 'package:hello_flutter/pages/item_page.dart';
@@ -24,15 +25,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final cartData = Cart();
+    final cartData = Cart.shared;
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          tooltip: 'Navigation menu',
-          onPressed: null,
-        ),
         title: Text('sportpit.ru', style: TextStyle(color: Colors.black)),
         actions: <Widget>[
           Container(
@@ -109,6 +105,50 @@ class _HomePageState extends State<HomePage> {
               );
             }
           }),
+      drawer: Drawer(
+        child: new ListView(
+          children: <Widget>[
+            new DrawerHeader(
+              margin: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
+              child: UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: Colors.yellow[700]),
+                accountName: Text('Мистер Твистер'),
+                accountEmail: Text("home@dartflutter.ru"),
+                currentAccountPicture: Container(
+                    child: Image.asset('images/user.png'),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    )),
+              ),
+            ),
+            new ListTile(
+                title: new Text("О себе"),
+                leading: Icon(Icons.account_box),
+                onTap: () {}),
+            new ListTile(
+                title: new Text("Избранное"),
+                leading: Icon(Icons.favorite),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => FavoritePage()),
+                  );
+                }),
+            new ListTile(
+                title: new Text("Настройки"),
+                leading: Icon(Icons.settings),
+                onTap: () {}),
+            new ListTile(
+                title: new Text("Помощь"),
+                leading: Icon(Icons.warning_rounded),
+                onTap: () {}),
+            new ListTile(
+                title: new Text("Информация"),
+                leading: Icon(Icons.error),
+                onTap: () {}),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomBar(),
     );
   }
