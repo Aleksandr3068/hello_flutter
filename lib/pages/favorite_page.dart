@@ -55,7 +55,7 @@ class _FavoritePageState extends State<FavoritePage> {
                           child: Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 2.0),
-                            child: Icon(Icons.favorite),
+                            child: Icon(Icons.favorite, color: Colors.red[500]),
                           ),
                         ),
                         TextSpan(
@@ -72,8 +72,9 @@ class _FavoritePageState extends State<FavoritePage> {
                   children: List.generate(_contacts.length, (index) {
                     return Container(
                       padding: EdgeInsets.all(10.0),
+                      // color: Colors.black12,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         verticalDirection: VerticalDirection.down,
                         children: <Widget>[
@@ -87,7 +88,7 @@ class _FavoritePageState extends State<FavoritePage> {
                             children: <Widget>[
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   new Text(
                                     '${_contacts[index].price}'.toString() +
@@ -112,7 +113,9 @@ class _FavoritePageState extends State<FavoritePage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  new Text(_contacts[index].name),
+                                  new Text(
+                                    _contacts[index].name,
+                                  ),
                                 ],
                               ),
                             ],
