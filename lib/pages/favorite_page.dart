@@ -70,48 +70,55 @@ class _FavoritePageState extends State<FavoritePage> {
                 return GridView.count(
                   crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
                   children: List.generate(_contacts.length, (index) {
-                    return new Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      verticalDirection: VerticalDirection.down,
-                      children: <Widget>[
-                        new Container(
-                          child: Image.asset(
-                            _contacts[index].image,
-                            height: 80,
+                    return Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        verticalDirection: VerticalDirection.down,
+                        children: <Widget>[
+                          new Expanded(
+                            child: Image.asset(
+                              _contacts[index].image,
+                            ),
                           ),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 0.0, vertical: 10.0),
-                        ),
-                        new Padding(
-                          padding: EdgeInsets.only(left: 10.0),
-                          child: new Column(
+                          new Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              new Text(_contacts[index].name),
-                              new Text(
-                                '${_contacts[index].price}'.toString() + " р.",
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  new Text(
+                                    '${_contacts[index].price}'.toString() +
+                                        " р.",
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  IconButton(
+                                    icon: (_isSelect
+                                        ? Icon(Icons.favorite)
+                                        : Icon(Icons.favorite_border)),
+                                    onPressed: () async {
+                                      await _dbHelper
+                                          .deleteContact(_contacts[index].id);
+                                      _refreshContactList();
+                                    },
+                                    color: Colors.red[500],
+                                  ),
+                                ],
                               ),
-                              Center(
-                                child: IconButton(
-                                  icon: (_isSelect
-                                      ? Icon(Icons.favorite)
-                                      : Icon(Icons.favorite_border)),
-                                  onPressed: () async {
-                                    await _dbHelper
-                                        .deleteContact(_contacts[index].id);
-                                    _refreshContactList();
-                                  },
-                                  color: Colors.red[500],
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  new Text(_contacts[index].name),
+                                ],
                               ),
                             ],
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     );
                   }),
                 );
