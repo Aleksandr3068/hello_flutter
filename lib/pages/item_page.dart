@@ -115,6 +115,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               proPrice: widget.product.price,
                               proBigimage: widget.product.bigimage,
                               proDescription: widget.product.description);
+                              
                           var form = _formKey.currentState;
                           if (_isSelect) {
                             await _dbHelper.deleteProduct(widget.product.id);

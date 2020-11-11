@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static const _databaseName = 'ProductbaseDemo.db';
+  static const _databaseName = 'ProductbaseTest.db';
   static const _databaseVersion = 1;
 
   DatabaseHelper._();
@@ -109,3 +109,69 @@ class DatabaseHelper {
     return map;
   }
 } */
+
+/* class Product  {
+  static const tbProduct = "product";
+  static const prId = "proId";
+  static const pName = "pname";
+  static const prImage = "proImage";
+  static const prSubtitle = "proSubtitle";
+  static const prPrice = "proPrice";
+  static const prDescription = "proPrice";
+  static const prBigimage = "proPrice";
+
+  Product({
+    this.proId,
+    this.pname,
+    this.proSubtitle,
+    this.proPrice,
+    this.proImage,
+    this.proDescription,
+    this.proBigimage,
+  });
+
+  String proId;
+  String pname;
+  String proSubtitle;
+  num proPrice;
+  String proImage;
+  String proDescription;
+  String proBigimage;
+
+    Product.fromMap(Map<String, dynamic> map) {
+    proId = map[prId];
+    pname = map[pName];
+    proImage = map[prImage];
+    proSubtitle = map[prSubtitle];
+    proPrice = map[prPrice];
+    proDescription = map[prDescription];
+    proBigimage = map[prBigimage];
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      pName: pname,
+      prImage: proImage,
+      prSubtitle: proSubtitle,
+      prPrice: proPrice,
+      prDescription: proDescription,
+      prBigimage: proBigimage
+    };
+    if (prId != null) {
+      map[prId] = proId;
+    }
+
+    return map;
+  } */
+
+/*   String dbId;
+  String dbName;
+  String dbImag e;
+  String dbSubtitle;
+  num dbPrice;
+  String dbDescription;
+  String dbBigimage; */
+
+
+
+/* } */
