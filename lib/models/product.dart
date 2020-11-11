@@ -1,7 +1,4 @@
-
-
 class Product {
-  static const tbProduct = "product";
   static const prId = "proId";
   static const prName = "proName";
   static const prImage = "proImage";
@@ -28,7 +25,7 @@ class Product {
   String proDescription;
   String proBigimage;
 
-    Product.fromMap(Map<String, dynamic> map) {
+  Product.fromMap(Map<String, dynamic> map) {
     proId = map[prId];
     proName = map[prName];
     proImage = map[prImage];
@@ -54,14 +51,6 @@ class Product {
     return map;
   }
 
-/*   String dbId;
-  String dbName;
-  String dbImag e;
-  String dbSubtitle;
-  num dbPrice;
-  String dbDescription;
-  String dbBigimage; */
-
   factory Product.fromJSON(Map<String, dynamic> json) {
     if (json == null) {
       return null;
@@ -84,6 +73,4 @@ class Product {
   get image => proImage;
   get description => proDescription;
   get bigimage => proBigimage;
-
-
 }

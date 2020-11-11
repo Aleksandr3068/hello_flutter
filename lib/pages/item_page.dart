@@ -27,13 +27,13 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     _dbHelper = DatabaseHelper.instance;
-    _refreshContactList();
+    _refreshProductList();
   }
 
-  _refreshContactList() async {
-    List<Product> x = await _dbHelper.fetchProducts();
+  _refreshProductList() async {
+    List<Product> productList = await _dbHelper.fetchProducts();
     setState(() {
-      _products = x;
+      _products = productList;
       print(_products);
       _toggleFavorite();
     });
@@ -115,19 +115,19 @@ class _DetailScreenState extends State<DetailScreen> {
                               proPrice: widget.product.price,
                               proBigimage: widget.product.bigimage,
                               proDescription: widget.product.description);
-                              
+
                           var form = _formKey.currentState;
                           if (_isSelect) {
                             await _dbHelper.deleteProduct(widget.product.id);
                             form.reset();
-                            _refreshContactList();
+                            _refreshProductList();
                             _isSelect = false;
                           } else {
                             if (form.validate()) {
                               form.save();
                               await _dbHelper.insertProduct(product);
                               form.reset();
-                              await _refreshContactList();
+                              await _refreshProductList();
                             }
                           }
                         },

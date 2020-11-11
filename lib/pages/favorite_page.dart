@@ -17,21 +17,19 @@ class _FavoritePageState extends State<FavoritePage> {
   void initState() {
     super.initState();
     _dbHelper = DatabaseHelper.instance;
-    _refreshContactList();
+    _refreshProductList();
   }
 
-  _refreshContactList() async {
-    List<Product> x = await _dbHelper.fetchProducts();
+  _refreshProductList() async {
+    List<Product> productList = await _dbHelper.fetchProducts();
     setState(() {
-      _products = x;
+      _products = productList;
       print(_products);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    bool _isSelect = true;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Избранное', style: TextStyle(color: Colors.black)),
@@ -96,13 +94,11 @@ class _FavoritePageState extends State<FavoritePage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   IconButton(
-                                    icon: (_isSelect
-                                        ? Icon(Icons.favorite)
-                                        : Icon(Icons.favorite_border)),
+                                    icon: (Icon(Icons.favorite)),
                                     onPressed: () async {
                                       await _dbHelper
                                           .deleteProduct(_products[index].id);
-                                      _refreshContactList();
+                                      _refreshProductList();
                                     },
                                     color: Colors.red[500],
                                   ),

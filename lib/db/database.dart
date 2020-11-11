@@ -5,8 +5,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static const _databaseName = 'ProductbaseTest.db';
+  static const _databaseName = 'DatabaseTest.db';
   static const _databaseVersion = 1;
+  static const tbProduct = "product";
 
   DatabaseHelper._();
   static final DatabaseHelper instance = DatabaseHelper._();
@@ -29,7 +30,7 @@ class DatabaseHelper {
   Future _onCreateDB(Database db, int version) async {
     //create tables
     await db.execute('''
-      CREATE TABLE ${Product.tbProduct}(
+      CREATE TABLE $tbProduct(
         ${Product.prId} TEXT PRIMARY KEY,
         ${Product.prName} TEXT,
         ${Product.prSubtitle} TEXT,
@@ -44,13 +45,13 @@ class DatabaseHelper {
   //product - insert
   Future<int> insertProduct(Product product) async {
     Database db = await database;
-    return await db.insert(Product.tbProduct, product.toMap());
+    return await db.insert(tbProduct, product.toMap());
   }
 
 //product- update
   Future<int> updateProduct(Product product) async {
     Database db = await database;
-    return await db.update(Product.tbProduct, product.toMap(),
+    return await db.update(tbProduct, product.toMap(),
         where: '${Product.prId}=?', whereArgs: [product.id]);
   }
 
@@ -58,120 +59,15 @@ class DatabaseHelper {
   Future<int> deleteProduct(String id) async {
     Database db = await database;
     return await db
-        .delete(Product.tbProduct, where: '${Product.prId}=?', whereArgs: [id]);
+        .delete(tbProduct, where: '${Product.prId}=?', whereArgs: [id]);
   }
 
 //product - retrieve all
   Future<List<Product>> fetchProducts() async {
     Database db = await database;
-    List<Map> products = await db.query(Product.tbProduct);
+    List<Map> products = await db.query(tbProduct);
     return products.length == 0
         ? []
-        : products.map((x) => Product.fromMap(x)).toList();
+        : products.map((productList) => Product.fromMap(productList)).toList();
   }
 }
-
-/* class Contact {
-  static const tbProduct = "product";
-  static const proId = "id";
-  static const prName = "name";
-  static const prImage = "image";
-  static const prSubtitle = "subtitle";
-  static const prPrice = "price";
-
-  Contact({this.id, this.name, this.image, this.subtitle, this.price});
-
-  String id;
-  String name;
-  String image;
-  String subtitle;
-  num price;
-
-  Contact.fromMap(Map<String, dynamic> map) {
-    id = map[proId];
-    name = map[prName];
-    image = map[prImage];
-    subtitle = map[prSubtitle];
-    price = map[prPrice];
-  }
-
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
-      prName: name,
-      prImage: image,
-      prSubtitle: subtitle,
-      prPrice: price
-    };
-    if (id != null) {
-      map[proId] = id;
-    }
-
-    return map;
-  }
-} */
-
-/* class Product  {
-  static const tbProduct = "product";
-  static const prId = "proId";
-  static const pName = "pname";
-  static const prImage = "proImage";
-  static const prSubtitle = "proSubtitle";
-  static const prPrice = "proPrice";
-  static const prDescription = "proPrice";
-  static const prBigimage = "proPrice";
-
-  Product({
-    this.proId,
-    this.pname,
-    this.proSubtitle,
-    this.proPrice,
-    this.proImage,
-    this.proDescription,
-    this.proBigimage,
-  });
-
-  String proId;
-  String pname;
-  String proSubtitle;
-  num proPrice;
-  String proImage;
-  String proDescription;
-  String proBigimage;
-
-    Product.fromMap(Map<String, dynamic> map) {
-    proId = map[prId];
-    pname = map[pName];
-    proImage = map[prImage];
-    proSubtitle = map[prSubtitle];
-    proPrice = map[prPrice];
-    proDescription = map[prDescription];
-    proBigimage = map[prBigimage];
-  }
-
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
-      pName: pname,
-      prImage: proImage,
-      prSubtitle: proSubtitle,
-      prPrice: proPrice,
-      prDescription: proDescription,
-      prBigimage: proBigimage
-    };
-    if (prId != null) {
-      map[prId] = proId;
-    }
-
-    return map;
-  } */
-
-/*   String dbId;
-  String dbName;
-  String dbImag e;
-  String dbSubtitle;
-  num dbPrice;
-  String dbDescription;
-  String dbBigimage; */
-
-
-
-/* } */
