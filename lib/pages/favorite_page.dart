@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/db/database.dart';
+import 'package:hello_flutter/models/product.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({Key key}) : super(key: key);
@@ -9,8 +10,7 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  Contact _contact = Contact();
-  List<Contact> _contacts = [];
+  List<Product> _products = [];
   DatabaseHelper _dbHelper;
 
   @override
@@ -21,10 +21,10 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   _refreshContactList() async {
-    List<Contact> x = await _dbHelper.fetchContacts();
+    List<Product> x = await _dbHelper.fetchProducts();
     setState(() {
-      _contacts = x;
-      print(_contacts);
+      _products = x;
+      print(_products);
     });
   }
 
@@ -37,7 +37,7 @@ class _FavoritePageState extends State<FavoritePage> {
         title: Text('Избранное', style: TextStyle(color: Colors.black)),
         actions: <Widget>[],
       ),
-      body: _contacts.isEmpty
+      body: _products.isEmpty
           ? Card(
               elevation: 10.0,
               margin: const EdgeInsets.all(30.0),
@@ -69,18 +69,16 @@ class _FavoritePageState extends State<FavoritePage> {
               builder: (context, orientation) {
                 return GridView.count(
                   crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
-                  children: List.generate(_contacts.length, (index) {
+                  children: List.generate(_products.length, (index) {
                     return Container(
                       padding: EdgeInsets.all(10.0),
-                      // color: Colors.black12,
                       child: Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         verticalDirection: VerticalDirection.down,
                         children: <Widget>[
                           new Expanded(
                             child: Image.asset(
-                              _contacts[index].image,
+                              _products[index].image,
                             ),
                           ),
                           new Column(
@@ -91,7 +89,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   new Text(
-                                    '${_contacts[index].price}'.toString() +
+                                    '${_products[index].price}'.toString() +
                                         " р.",
                                     style: TextStyle(
                                         fontSize: 16.0,
@@ -103,7 +101,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                         : Icon(Icons.favorite_border)),
                                     onPressed: () async {
                                       await _dbHelper
-                                          .deleteContact(_contacts[index].id);
+                                          .deleteProduct(_products[index].id);
                                       _refreshContactList();
                                     },
                                     color: Colors.red[500],
@@ -114,7 +112,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   new Text(
-                                    _contacts[index].name,
+                                    _products[index].name,
                                   ),
                                 ],
                               ),

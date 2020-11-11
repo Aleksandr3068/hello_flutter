@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:hello_flutter/models/product.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -28,47 +29,49 @@ class DatabaseHelper {
   Future _onCreateDB(Database db, int version) async {
     //create tables
     await db.execute('''
-      CREATE TABLE ${Contact.tbProduct}(
-        ${Contact.proId} TEXT PRIMARY KEY,
-        ${Contact.prName} TEXT,
-        ${Contact.prSubtitle} TEXT,
-        ${Contact.prImage} TEXT,
-        ${Contact.prPrice} INTEGER
+      CREATE TABLE ${Product.tbProduct}(
+        ${Product.prId} TEXT PRIMARY KEY,
+        ${Product.prName} TEXT,
+        ${Product.prSubtitle} TEXT,
+        ${Product.prImage} TEXT,
+        ${Product.prBigimage} TEXT,
+        ${Product.prDescription} TEXT,
+        ${Product.prPrice} INTEGER
       )
       ''');
   }
 
   //product - insert
-  Future<int> insertContact(Contact contact) async {
+  Future<int> insertProduct(Product product) async {
     Database db = await database;
-    return await db.insert(Contact.tbProduct, contact.toMap());
+    return await db.insert(Product.tbProduct, product.toMap());
   }
 
 //product- update
-  Future<int> updateContact(Contact contact) async {
+  Future<int> updateProduct(Product product) async {
     Database db = await database;
-    return await db.update(Contact.tbProduct, contact.toMap(),
-        where: '${Contact.proId}=?', whereArgs: [contact.id]);
+    return await db.update(Product.tbProduct, product.toMap(),
+        where: '${Product.prId}=?', whereArgs: [product.id]);
   }
 
 //product - delete
-  Future<int> deleteContact(String id) async {
+  Future<int> deleteProduct(String id) async {
     Database db = await database;
-    return await db.delete(Contact.tbProduct,
-        where: '${Contact.proId}=?', whereArgs: [id]);
+    return await db
+        .delete(Product.tbProduct, where: '${Product.prId}=?', whereArgs: [id]);
   }
 
 //product - retrieve all
-  Future<List<Contact>> fetchContacts() async {
+  Future<List<Product>> fetchProducts() async {
     Database db = await database;
-    List<Map> contacts = await db.query(Contact.tbProduct);
-    return contacts.length == 0
+    List<Map> products = await db.query(Product.tbProduct);
+    return products.length == 0
         ? []
-        : contacts.map((x) => Contact.fromMap(x)).toList();
+        : products.map((x) => Product.fromMap(x)).toList();
   }
 }
 
-class Contact {
+/* class Contact {
   static const tbProduct = "product";
   static const proId = "id";
   static const prName = "name";
@@ -105,4 +108,4 @@ class Contact {
 
     return map;
   }
-}
+} */

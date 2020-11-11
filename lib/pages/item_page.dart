@@ -19,8 +19,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   bool _isSelect = false;
 
-  Contact _contact = Contact();
-  List<Contact> _contacts = [];
+  List<Product> _products = [];
   DatabaseHelper _dbHelper;
   final _formKey = GlobalKey<FormState>();
 
@@ -32,10 +31,10 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   _refreshContactList() async {
-    List<Contact> x = await _dbHelper.fetchContacts();
+    List<Product> x = await _dbHelper.fetchProducts();
     setState(() {
-      _contacts = x;
-      print(_contacts);
+      _products = x;
+      print(_products);
       _toggleFavorite();
     });
   }
@@ -108,22 +107,24 @@ class _DetailScreenState extends State<DetailScreen> {
                             : Icon(Icons.favorite_border)),
                         onPressed: () async {
                           _toggleFavorite();
-                          Contact product = Contact(
-                              id: widget.product.id,
-                              image: widget.product.image,
-                              subtitle: widget.product.subtitle,
-                              name: widget.product.name,
-                              price: widget.product.price);
+                          Product product = Product(
+                              proId: widget.product.id,
+                              proImage: widget.product.image,
+                              proSubtitle: widget.product.subtitle,
+                              proName: widget.product.name,
+                              proPrice: widget.product.price,
+                              proBigimage: widget.product.bigimage,
+                              proDescription: widget.product.description);
                           var form = _formKey.currentState;
                           if (_isSelect) {
-                            await _dbHelper.deleteContact(widget.product.id);
+                            await _dbHelper.deleteProduct(widget.product.id);
                             form.reset();
                             _refreshContactList();
                             _isSelect = false;
                           } else {
                             if (form.validate()) {
                               form.save();
-                              await _dbHelper.insertContact(product);
+                              await _dbHelper.insertProduct(product);
                               form.reset();
                               await _refreshContactList();
                             }
@@ -174,7 +175,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   void _toggleFavorite() {
     setState(() {
-      _contacts.forEach((item) {
+      _products.forEach((item) {
         if (item.id == widget.product.id) {
           _isSelect = true;
         }

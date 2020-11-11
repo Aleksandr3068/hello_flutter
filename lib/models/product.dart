@@ -1,38 +1,87 @@
 import 'package:flutter/foundation.dart';
 
 class Product with ChangeNotifier {
-  final String _id;
-  final String _name;
-  final String _subtitle;
-  final num _price;
-  final String _image;
-  final String _description;
-  final String _bigimage;
+  static const tbProduct = "product";
+  static const prId = "proId";
+  static const prName = "proName";
+  static const prImage = "proImage";
+  static const prSubtitle = "proSubtitle";
+  static const prPrice = "proPrice";
+  static const prDescription = "proPrice";
+  static const prBigimage = "proPrice";
 
-  Product(
-    this._id,
-    this._name,
-    this._subtitle,
-    this._price,
-    this._image,
-    this._description,
-    this._bigimage,
-  );
+  Product({
+    this.proId,
+    this.proName,
+    this.proSubtitle,
+    this.proPrice,
+    this.proImage,
+    this.proDescription,
+    this.proBigimage,
+  });
+
+  String proId;
+  String proName;
+  String proSubtitle;
+  num proPrice;
+  String proImage;
+  String proDescription;
+  String proBigimage;
+
+/*   String dbId;
+  String dbName;
+  String dbImage;
+  String dbSubtitle;
+  num dbPrice;
+  String dbDescription;
+  String dbBigimage; */
 
   factory Product.fromJSON(Map<String, dynamic> json) {
     if (json == null) {
       return null;
     } else {
-      return Product(json["id"], json["name"], json["subtitle"], json["price"],
-          json["image"], json["description"], json["bigimage"]);
+      return Product(
+          proId: json["id"],
+          proName: json["name"],
+          proSubtitle: json["subtitle"],
+          proPrice: json["price"],
+          proImage: json["image"],
+          proDescription: json["description"],
+          proBigimage: json["bigimage"]);
     }
   }
 
-  get id => this._id;
-  get name => this._name;
-  get subtitle => this._subtitle;
-  get price => this._price;
-  get image => this._image;
-  get description => this._description;
-  get bigimage => this._bigimage;
+  get id => proId;
+  get name => proName;
+  get subtitle => proSubtitle;
+  get price => proPrice;
+  get image => proImage;
+  get description => proDescription;
+  get bigimage => proBigimage;
+
+  Product.fromMap(Map<String, dynamic> map) {
+    proId = map[prId];
+    proName = map[prName];
+    proImage = map[prImage];
+    proSubtitle = map[prSubtitle];
+    proPrice = map[prPrice];
+    proDescription = map[prDescription];
+    proBigimage = map[prBigimage];
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      prName: proName,
+      prImage: proImage,
+      prSubtitle: proSubtitle,
+      prPrice.toString(): proPrice,
+      prDescription: proDescription,
+      prBigimage: proBigimage
+    };
+    if (id != null) {
+      map[prId] = proId;
+    }
+
+    return map;
+  }
 }
