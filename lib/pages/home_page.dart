@@ -32,24 +32,55 @@ class _HomePageState extends State<HomePage> {
         title: Text('sportpit.ru', style: TextStyle(color: Colors.black)),
         actions: <Widget>[
           Container(
-            height: 50.0,
-            width: MediaQuery.of(context).size.width / 2 - 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(cartData.totalAmount.toStringAsFixed(2)),
-                IconButton(
-                  icon: Icon(Icons.shopping_basket, color: Color(0xFF676E79)),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CartPage(),
-                    ));
-                  },
+              alignment: Alignment.centerRight,
+              height: 50.0,
+              width: MediaQuery.of(context).size.width / 2 - 100,
+              margin: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
+              child: Text(cartData.totalAmount.toStringAsFixed(2))),
+          Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width / 2 - 150,
+                margin: const EdgeInsets.fromLTRB(0.0, 5.0, 25.0, 5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon:
+                          Icon(Icons.shopping_basket, color: Color(0xFF676E79)),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CartPage(),
+                        ));
+                      },
+                    ),
+                  ],
                 ),
-                Text(" (" + cartData.quantityProducts.toStringAsFixed(0) + ")",
-                    textAlign: TextAlign.start),
-              ],
-            ),
+              ),
+              Positioned(
+                  right: 32,
+                  bottom: 28,
+                  child: Container(
+                    padding: EdgeInsets.all(2.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colors.white,
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(cartData.quantityProducts.toStringAsFixed(0),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.amber[900],
+                        )),
+                  )),
+            ],
           ),
         ],
       ),
